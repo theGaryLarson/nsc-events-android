@@ -17,28 +17,28 @@ on:
       repository-projects: write
       security-events: write
       statuses: write
-    jobs:
-      sync-branch:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v3
-            with:
-              fetch-depth: 0 # fetch all history so we can perform a merge
-              ref: 'staging'
-          - name: Configure Git
-            run: |
-              git config user.name "GitHub Actions"
-              git config user.email "actions@github.com"
-            #          git push origin staging
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            # git merge main --no-ff -> no fast forwarding makes it easier to track changes
-            # flag option to auto resolve merge conflicts using mains changes --strategy-option ours
-          - name: Merge main(dev) -> staging
-            run: |
-              git checkout main
-              git pull
-              git checkout staging
-              git merge main --no-ff  
-              git push origin staging
+jobs:
+  sync-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # fetch all history so we can perform a merge
+          ref: 'staging'
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+        #          git push origin staging
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # git merge main --no-ff -> no fast forwarding makes it easier to track changes
+        # flag option to auto resolve merge conflicts using mains changes --strategy-option ours
+      - name: Merge main(dev) -> staging
+        run: |
+          git checkout main
+          git pull
+          git checkout staging
+          git merge main --no-ff  
+          git push origin staging
