@@ -34,7 +34,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # git merge main --no-ff -> no fast forwarding makes it easier to track changes
-        # flag option to auto resolve merge conflicts using mains changes --strategy-option ours
+        # flag option to auto resolve merge conflicts using mains changes git merge main --no-ff --strategy-option ours
       - name: Merge main(dev) -> staging
         run: |
           git checkout main
