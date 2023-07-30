@@ -29,6 +29,7 @@ on:
       - closed
 
 jobs:
+  # redundant check to ensure CI passes before deployment
   CI-Staging:
     if: github.event.pull_request.merged == true || github.event_name == 'push'
     uses: ./.github/workflows/ci.yml # reusable workflow file path
