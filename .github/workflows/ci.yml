@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI (triggers on ALL)
 run-name: Gradle CI
 on:
   workflow_call: # required when creating a reusable workflow
@@ -13,21 +13,18 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        gradle-version: ['8.2.1']
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Install SDKMAN!
-        run: curl -s "https://get.sdkman.io" | bash
-      - name: Install specific Gradle version with SDKMAN!
+      - name: Download and unzip Gradle
         run: |
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk install gradle ${{ matrix.gradle-version }}
+          wget https://services.gradle.org/distributions/gradle-8.2.1-bin.zip
+          unzip gradle-8.2.1-bin.zip
+          echo "${GITHUB_WORKSPACE}/gradle-8.2.1/bin" >> $GITHUB_PATH
+      - name: Verify Gradle version
+        run: gradle --version
       - name: Run the Gradle package task
         run: gradle build
