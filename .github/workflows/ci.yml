@@ -1,4 +1,4 @@
-name: CI (unsigned apk)
+name: Continuous Integration
 run-name: Gradle CI
 on:
   workflow_call: # required when creating a reusable workflow
@@ -15,8 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        gradle-version: [8.1.0]
-
+        gradle-version: ['8.1.0']
 
     steps:
       - uses: actions/checkout@v3
@@ -24,40 +23,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          # fix: Looks like building 2x these two steps should be combined with Build with Gradle below
-      - name: Install specific Gradle version
+      - name: Install SDKMAN!
+        run: curl -s "https://get.sdkman.io" | bash
+      - name: Install specific Gradle version with SDKMAN!
         run: |
-            wget https://services.gradle.org/distributions/gradle-${{ matrix.gradle-version }}-bin.zip
-            unzip gradle-${{ matrix.gradle-version }}-bin.zip
-            echo "${GITHUB_WORKSPACE}/gradle-${{ matrix.gradle-version }}/bin" >> $GITHUB_PATH
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk install gradle ${{ matrix.gradle-version }}
       - name: Run the Gradle package task
-        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
-
-
-      # dependencies automatically installed by gradle
-
-      - name: Lint code
-        run: ./gradlew lint
-
-      - name: Compile Tests
-        run: ./gradlew compileDebugAndroidTestKotlin
-
-      - name: Run unit tests
-        run: ./gradlew test
-
-      - name: Code coverage
-        run: ./gradlew koverhtmlreport
-
-      # Build workflow and save as artifact
-      # Gradle will automatically compile Kotlin when running tasks like build. This step explicitly validates Kotlin.
-      # If there are Kotlin compile errors, this step will fail and you'll see the compilation issues in the logs.
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
-        with:
-          arguments: build --scan
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Package
-          path: app/build/outputs/apk/release/app-release-unsigned.apk
+        run: gradle build
