@@ -25,7 +25,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           # fix: Looks like building 2x these two steps should be combined with Build with Gradle below
-
+      - name: Install specific Gradle version
+        run: |
+            wget https://services.gradle.org/distributions/gradle-${{ matrix.gradle-version }}-bin.zip
+            unzip gradle-${{ matrix.gradle-version }}-bin.zip
+            echo "${GITHUB_WORKSPACE}/gradle-${{ matrix.gradle-version }}/bin" >> $GITHUB_PATH
       - name: Run the Gradle package task
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
 
