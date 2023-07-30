@@ -48,3 +48,7 @@ google-services.json
 .externalNativeBuild
 .cxx
 local.properties
+
+#ensure no secrets in repo
+.env*
+!.env.sample
