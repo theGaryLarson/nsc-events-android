@@ -1,5 +1,5 @@
-name: CI New Branch
-run-name: CI On New Branch
+name: CI (On New Branch / On Push to Main)
+run-name: CI (On New Branch / On Push to Main)
 
 
 on:
