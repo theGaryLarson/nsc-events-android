@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI (unsigned apk)
 run-name: Gradle CI
 on:
   workflow_call: # required when creating a reusable workflow
@@ -56,4 +56,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Package
-          path: build/libs
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
